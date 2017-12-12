@@ -222,9 +222,6 @@
       <div id="toc" class="toc-list-h1">
           <li>
             <a href="#index" class="toc-h1 toc-link" data-title="Index">Index</a>
-          </li>
-          <li>
-            <a href="#" class="toc-h1 toc-link" data-title="!!!">!!!</a>
               <ul class="toc-list-h2">
                   <li>
                     <a href="#logout-5-message" class="toc-h2 toc-link" data-title="Logout &lt;5&gt; message">Logout &lt;5&gt; message</a>
@@ -267,8 +264,6 @@
       <div class="dark-box"></div>
       <div class="content">
         <h1 id='index'>Index</h1>
-<p>789456123</p>
-<h1 id=''>!!!</h1>
 <p><a href='## Logon_<A>_message&#39;&gt;Logon <A> message</a><br>
 Logout <5> message<br>
 Workflow<br>
@@ -286,7 +281,7 @@ Security List <y> message    16
 Market Data Request <V> message    18
 Market Data - Snapshot/Full Refresh <W> message    20
 Market Data - Incremental Refresh <X> message    21</p>
-<h2 id='logon_-a-_message'>Logon_<A>_message</h2>
+<h2 id='logon-quot-a-quot-message'>Logon &quot;<A>&quot; message</h2>
 <p>Logon <code>&lt;A&gt;</code> message
 The Logon &#39;<A>&#39; message must be the first message sent by the application requesting to initiate a FIX session. The Logon <A>message authenticates an institution establishing a connection to Server.</p>
 
@@ -302,14 +297,23 @@ The Logon &#39;<A>&#39; message must be the first message sent by the applicatio
 <td>98</td>
 <td>EncryptMethod</td>
 <td>Y</td>
-<td>Server does not support encryption. Valid values:</td>
+<td>Server does not support encryption. Valid values:<br> 0 = None</td>
+</tr>
+<tr>
+<td>108</td>
+<td>HeartBtInt</td>
+<td>Y</td>
+<td>Heartbeat <0> message interval (seconds)</td>
+</tr>
+<tr>
+<td>141</td>
+<td>ResetSeqNumFlag</td>
+<td>N</td>
+<td>Indicates that the both sides of the FIX session should reset sequence numbers.</td>
 </tr>
 </tbody></table>
 
-<p>0 = None
-108|HeartBtInt|Y|Heartbeat <0> message interval (seconds)
-141|ResetSeqNumFlag|N|Indicates that the both sides of the FIX session should reset sequence numbers. 
-Valid values:<br>Y = Yes, reset sequence numbers   N = No</p>
+<p>Valid values:<br>Y = Yes, reset sequence numbers   N = No</p>
 <h2 id='logout-5-message'>Logout <5> message</h2>
 <p>The Logout <5> message initiates or confirms the termination of a FIX session. Disconnection without the exchange of Logout <5> messages should be interpreted as an abnormal condition.</p>
 
