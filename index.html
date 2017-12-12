@@ -222,7 +222,21 @@
         <ul class="search-results"></ul>
       <div id="toc" class="toc-list-h1">
           <li>
-            <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
+            <a href="#index" class="toc-h1 toc-link" data-title="Index">Index</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#logon-a-message" class="toc-h2 toc-link" data-title="Logon <a> message</a>">Logon <a> message</a></a>
+                  </li>
+                  <li>
+                    <a href="#logout-5-message" class="toc-h2 toc-link" data-title="Logout &lt;5&gt; message">Logout &lt;5&gt; message</a>
+                  </li>
+                  <li>
+                    <a href="#new-order-single-d-message" class="toc-h2 toc-link" data-title="New Order Single <d> message</d>">New Order Single <d> message</d></a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#quantbrothers" class="toc-h1 toc-link" data-title="QuantBrothers">QuantBrothers</a>
           </li>
           <li>
             <a href="#authentication" class="toc-h1 toc-link" data-title="Authentication">Authentication</a>
@@ -246,14 +260,106 @@
           </li>
       </div>
         <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
-            <li><a href='https://github.com/lord/slate'>Documentation Powered by Slate</a></li>
+            <li><a href='#'>-------------</a></li>
+            <li><a href='www.QuantBrothers.com'>QuantBrothers</a></li>
         </ul>
     </div>
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id='introduction'>Introduction</h1>
+        <h1 id='index'>Index</h1>
+<p>(## Logon <A> message) Logon <A> message
+Logout <5> message    2
+Workflow    3
+New Order Single <D> message    3
+Submitting an order    4
+Execution Report <8> message    5
+Order Cancel/Replace Request <G> message    8
+Submitting an order changes    10
+Order Cancel Request <F> message    11
+Submitting an order cancel    12
+Order Status Request <H> message    13
+Order Mass Status Request <AF> message    14
+Security List Request <x> message    15
+Security List <y> message    16
+Market Data Request <V> message    18
+Market Data - Snapshot/Full Refresh <W> message    20
+Market Data - Incremental Refresh <X> message    21</p>
+<h2 id='logon-a-message'>Logon <A> message</h2>
+<p>Logon <A> message
+The Logon <A> message must be the first message sent by the application requesting to initiate a FIX session. The Logon <A>message authenticates an institution establishing a connection to Server.</p>
+
+<table><thead>
+<tr>
+<th>Tag</th>
+<th>Name</th>
+<th>Req</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>98</td>
+<td>EncryptMethod</td>
+<td>Y</td>
+<td>Server does not support encryption. Valid values: 0 = None</td>
+</tr>
+<tr>
+<td>108</td>
+<td>HeartBtInt</td>
+<td>Y</td>
+<td>Heartbeat <0> message interval (seconds)</td>
+</tr>
+<tr>
+<td>141</td>
+<td>ResetSeqNumFlag</td>
+<td>N</td>
+<td>Indicates that the both sides of the FIX session should reset sequence numbers. Valid values: Y = Yes, reset sequence numbers   N = No</td>
+</tr>
+</tbody></table>
+<h2 id='logout-5-message'>Logout <5> message</h2>
+<p>The Logout <5> message initiates or confirms the termination of a FIX session. Disconnection without the exchange of Logout <5> messages should be interpreted as an abnormal condition.</p>
+
+<aside class="notice">
+## Workflow
+After connecting, logging on, and synchronizing sequence numbers, the client can submit orders.
+</aside>
+<h2 id='new-order-single-d-message'>New Order Single <D> message</h2>
+<p>To submit a new order to server, send a New Order Single <D> message.
+Server will respond to a New Order Single <D> message with an Execution Report <8>.</p>
+
+<p>Tag|Name|Req|Description
+11|ClOrdID|Y|Unique identifier of the order as assigned by the client. Uniqueness must be guaranteed by the client for the duration of the lifetime the order.
+1|Account|N|Market account id
+660|AcctIDSource|Y* (required if use Account <1>)|Type of account. Should be 99 = Other (custom or proprietary) This field is required if 1 = Account contains account identifier.
+40|OrdType|Y|Order type. Valid values:   1 = Market   2 = Limit
+44|Price|Y* (required if OrdType <40> = 2  Limit)|Price per unit of quantity
+38|OrderQty|Y|Quantity ordered. Needed &gt; 0
+54|Side|Y|Side of the order. Valid values:   1 = Buy    2 = Sell
+55|Symbol|Y|Ticker symbol. Common, &quot;human understood&quot; representation of the security. e.g. ETH/BTC
+59|TimeInForce|N|Specifies how long the order remains in effect. Valid values:    1 = Good Till Cancel (GTC)   3 = Immediate or Cancel (IOC)   4 = Fill or Kill (FOK)
+60|TransactTime|Y|Time of request creation</p>
+
+<aside class="notice">
+## Submitting an order
+1. Client sends server → New Order Single <D> message
+2. Does server accept the order?
+   -Yes, order is accepted for initial processing
+    * server sends client ← an Execution Report <8> for a new order with:
+        * ExecType <150> set to I = Order Status
+        * OrdStatus <39> set to A = Pending New
+    *Is the order marketable?
+        * Yes, server executes one or more initial fills
+            1. server sends client ← an Execution Report <8> for each fill or partial fill
+            2. Does the order have remaining quantity?
+                * Yes, server puts the remaining quantity on the book
+                * No, server closes the order
+        * No, server puts the entire quantity of the order on the book
+  -No, order is rejected
+    * server sends client ← an Execution Report <8> indicating the order was rejected with:
+    * ExecType <150> set to 8 = Rejected
+    * OrdStatus <39> set to 8 = Rejected
+</aside>
+<h1 id='quantbrothers'>QuantBrothers</h1>
 <p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
 
 <p>We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
