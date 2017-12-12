@@ -2,14 +2,13 @@
 title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
-  - shell
-  - ruby
+  - C#
   - python
   - javascript
 
 toc_footers:
   - <a href='#'>-------------</a>
-  - <a href='www.QuantBrothers.com'>QuantBrothers</a>
+  - <a href='http://www.QuantBrothers.com'>QuantBrothers</a>
 
 includes:
   - errors
@@ -18,15 +17,16 @@ search: true
 ---
 
 # Index
+789456123
+# !!!
 
-
-(## Logon <A> message) Logon <A> message
-Logout <5> message    2
-Workflow    3
-New Order Single <D> message    3
-Submitting an order    4
-Execution Report <8> message    5
-Order Cancel/Replace Request <G> message    8
+<a href='## Logon_<A>_message'>Logon <A> message</a><br>
+Logout <5> message<br>
+Workflow<br>
+New Order Single '<D>' message<br>
+Submitting an order<br>
+Execution Report <8> message<br>
+Order Cancel/Replace Request `<G>` message<br>
 Submitting an order changes    10
 Order Cancel Request <F> message    11
 Submitting an order cancel    12
@@ -40,16 +40,18 @@ Market Data - Incremental Refresh <X> message    21
 
 
 
-## Logon <A> message
+## Logon_<A>_message
 
-Logon <A> message
-The Logon <A> message must be the first message sent by the application requesting to initiate a FIX session. The Logon <A>message authenticates an institution establishing a connection to Server.
+Logon `<A>` message
+The Logon '<A>' message must be the first message sent by the application requesting to initiate a FIX session. The Logon <A>message authenticates an institution establishing a connection to Server.
 
 Tag|Name|Req|Description
 ---|----|---|-----------
-98|EncryptMethod|Y|Server does not support encryption. Valid values: 0 = None
+98|EncryptMethod|Y|Server does not support encryption. Valid values: 
+0 = None
 108|HeartBtInt|Y|Heartbeat <0> message interval (seconds)
-141|ResetSeqNumFlag|N|Indicates that the both sides of the FIX session should reset sequence numbers. Valid values: Y = Yes, reset sequence numbers   N = No
+141|ResetSeqNumFlag|N|Indicates that the both sides of the FIX session should reset sequence numbers. 
+Valid values:<br>Y = Yes, reset sequence numbers   N = No
 
 
 ## Logout <5> message
@@ -329,4 +331,5 @@ This endpoint deletes a specific kitten.
 Parameter | Description
 --------- | -----------
 ID | The ID of the kitten to delete
+
 
