@@ -297,23 +297,21 @@ The Logon &#39;<A>&#39; message must be the first message sent by the applicatio
 <td>98</td>
 <td>EncryptMethod</td>
 <td>Y</td>
-<td>Server does not support encryption. Valid values:<br> 0 = None</td>
+<td>Server does not support encryption.<br>Valid values:<br> 0 = None</td>
 </tr>
 <tr>
 <td>108</td>
 <td>HeartBtInt</td>
 <td>Y</td>
-<td>Heartbeat <0> message interval (seconds)</td>
+<td>Heartbeat <code>&lt;0&gt;</code> message interval (seconds)</td>
 </tr>
 <tr>
 <td>141</td>
 <td>ResetSeqNumFlag</td>
 <td>N</td>
-<td>Indicates that the both sides of the FIX session should reset sequence numbers.</td>
+<td>Indicates that the both sides of the FIX session should reset sequence numbers.<br> Valid values:<br>Y = Yes, reset sequence numbers N = No</td>
 </tr>
 </tbody></table>
-
-<p>Valid values:<br>Y = Yes, reset sequence numbers   N = No</p>
 <h2 id='logout-5-message'>Logout <5> message</h2>
 <p>The Logout <5> message initiates or confirms the termination of a FIX session. Disconnection without the exchange of Logout <5> messages should be interpreted as an abnormal condition.</p>
 
