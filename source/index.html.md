@@ -225,11 +225,11 @@ Tag|Name|Req|Description
 322 | SecurityResponseID | Y | Unique ID of a Security (if SecurityRequestResult `<560>` = 0 (Valid request))
 560 | SecurityRequestResult | Y | The results returned to a Security Request message.<br>Possible values:<br>   0 = Valid request<br>   1 = Invalid or unsupported request<br>   2 = No instruments found that match selection criteria
 146 | NoRelatedSym | Y | Specifies the number of repeating symbols specified.
-=> 55 | Symbol | Y * (required if SecurityRequestResult `<560>` = 0 (Valid request)) | Ticker symbol. Common, "human understood" representation of the security. e.g. ETH/BTC
-=> 207 | SecurityExchange | Y * (required if SecurityRequestResult `<560>` = 0 (Valid request)) | Market name.
-=> 15 | Currency | Y * (required if SecurityRequestResult `<560>` = 0 (Valid request)) | Identifies currency used for price.
-=> 561 | RoundLot | Y * (required if SecurityRequestResult `<560>` = 0 (Valid request)) | The trading lot size of a security
-=> 562 | MinTradeVol | N * (if SecurityRequestResult `<560>` = 0 (Valid request) and the market provides this value, then it is) | The minimum trading volume for a security
+=>55 | Symbol | Y * (required if SecurityRequestResult `<560>` = 0 (Valid request)) | Ticker symbol. Common, "human understood" representation of the security. e.g. ETH/BTC
+=>207 | SecurityExchange | Y * (required if SecurityRequestResult `<560>` = 0 (Valid request)) | Market name.
+=>15 | Currency | Y * (required if SecurityRequestResult `<560>` = 0 (Valid request)) | Identifies currency used for price.
+=>561 | RoundLot | Y * (required if SecurityRequestResult `<560>` = 0 (Valid request)) | The trading lot size of a security
+=>562 | MinTradeVol | N * (if SecurityRequestResult `<560>` = 0 (Valid request) and the market provides this value, then it is) | The minimum trading volume for a security
 393 | TotNoRelatedSym | Y | Total number of securities returned in response to a request
 893 | LastFragment | Y | Indicates whether this message is that last report message in response to a Security List Request `<x>`.<br>Y = Last message<br>N = Not last message
 
@@ -245,10 +245,10 @@ Tag|Name|Req|Description
 264 | MarketDepth | Y | Depth of market for Book <br>Valid values:<br>   0 = Full Book<br>   1 = Top of Book<br>   N> = Report best N price tiers of data
 265 | MDUpdateType | Y * (required if SubscriptionRequestType `<263>` = 1 ( Snapshot + Updates (Subscribe))) | Specifies the type of Market Data update.<br>Valid values:<br>   0 = Full Refresh<br>   1 = Incremental Refresh
 267 | NoMDEntryTypes | Y | Number of MDEntryType `<269>`  fields requested.
-=> 269 | MDEntryType | Y * (required if NoMDEntryTypes `<267>` > 0) | Type Market Data entry.<br>Valid values:<br>   0 = Bid<br>   1 = Offer<br>   2 = Trade
+=>269 | MDEntryType | Y * (required if NoMDEntryTypes `<267>` > 0) | Type Market Data entry.<br>Valid values:<br>   0 = Bid<br>   1 = Offer<br>   2 = Trade
 146 | NoRelatedSym | Y | Specifies the number of repeating symbols specified.
-=> 55 | Symbol| Y * (required if NoRelatedSym `<146>` > 0) | Ticker symbol. Common, "human understood" representation of the security. e.g. ETH/BTC
-=> 207 | SecurityExchange | N | Name of the exchange. e.g. “Kraken” Subscribed to all exchanges if not specified.
+=>55 | Symbol| Y * (required if NoRelatedSym `<146>` > 0) | Ticker symbol. Common, "human understood" representation of the security. e.g. ETH/BTC
+=>207 | SecurityExchange | N | Name of the exchange. e.g. “Kraken” Subscribed to all exchanges if not specified.
 
 If a subscription error occurs, server will return Market Data Request Reject `<Y>` message with MDReqID `<262>` refer to the MDReqID `<262>` of the request. 
 
@@ -273,9 +273,9 @@ Tag|Name|Req|Description
 55 | Symbol | Y | Ticker symbol. Common, "human understood" representation of the security. e.g. ETH/BTC
 207 | SecurityExchange | Y | Market name.
 268 | NoMDEntries | Y | Number of entries in Market Data message.
-=> 269 | MDEntryType | Y * (required if NoMDEntries `<268>` > 0) | Type Market Data entry.<br>Possible values:<br>   0 = Bid<br>   1 = Offer<br>   2 = Trade
-=> 270 | MDEntryPx | Y * (required if NoMDEntries `<268>` > 0) | Price `<44>` of the Market Data Entry.
-=> 271 | MDEntrySize | Y * (required if NoMDEntries `<268>` > 0) | Quantity `<53>` or volume represented by the Market Data Entry.
+=>269 | MDEntryType | Y * (required if NoMDEntries `<268>` > 0) | Type Market Data entry.<br>Possible values:<br>   0 = Bid<br>   1 = Offer<br>   2 = Trade
+=>270 | MDEntryPx | Y * (required if NoMDEntries `<268>` > 0) | Price `<44>` of the Market Data Entry.
+=>271 | MDEntrySize | Y * (required if NoMDEntries `<268>` > 0) | Quantity `<53>` or volume represented by the Market Data Entry.
 
 
 ## Market Data - Incremental Refresh < X> message
@@ -286,11 +286,11 @@ Tag|Name|Req|Description
 ---|----|---|-----------
 262 | MDReqID | Y | Unique identifier for Market Data Request `<V>`
 268 | NoMDEntries | Y | Number of entries in Market Data message.
-=> 269 | MDEntryType | Y * (required if NoMDEntries `<268>` > 0) | Type Market Data entry.<br>Possible values:<br>   0 = Bid<br>   1 = Offer<br>   2 = Trade
-=> 270 | MDEntryPx | Y * (required if NoMDEntries `<268>` > 0) | Price `<44>` of the Market Data Entry.
-=> 271 | MDEntrySize | Y * (required if NoMDEntries `<268>` > 0) | Quantity `<53>` or volume represented by the Market Data Entry.
-=> 279 | MDUpdateAction | Y * (required if NoMDEntries `<268>` > 0) | Type of Market Data update action.<br>Possible values:<br>   0 = New<br>   1 = Change<br>   2 = Delete
-=> 55 | Symbol | Y * (required if NoMDEntries `<268>` > 0) | Ticker symbol. Common, "human understood" representation of the security. e.g. ETH/BTC
-=> 207 | SecurityExchange | Y * (required if NoMDEntries `<268>` > 0) | Market name.
+=>269 | MDEntryType | Y * (required if NoMDEntries `<268>` > 0) | Type Market Data entry.<br>Possible values:<br>   0 = Bid<br>   1 = Offer<br>   2 = Trade
+=>270 | MDEntryPx | Y * (required if NoMDEntries `<268>` > 0) | Price `<44>` of the Market Data Entry.
+=>271 | MDEntrySize | Y * (required if NoMDEntries `<268>` > 0) | Quantity `<53>` or volume represented by the Market Data Entry.
+=>279 | MDUpdateAction | Y * (required if NoMDEntries `<268>` > 0) | Type of Market Data update action.<br>Possible values:<br>   0 = New<br>   1 = Change<br>   2 = Delete
+=>55 | Symbol | Y * (required if NoMDEntries `<268>` > 0) | Ticker symbol. Common, "human understood" representation of the security. e.g. ETH/BTC
+=>207 | SecurityExchange | Y * (required if NoMDEntries `<268>` > 0) | Market name.
 
 >End
