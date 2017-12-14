@@ -19,14 +19,6 @@ message which represents
 
 ## Logon < A> message
 
-The Logon `<A>` message must be the first message sent by the application requesting to initiate a FIX session. The Logon `<A>` message authenticates an institution establishing a connection to Server.
-
-Tag|Name|Req|Description
----|----|---|-----------
-98|EncryptMethod|Y|Server does not support encryption. Valid values: 0 = None.
-108|HeartBtInt|Y|Heartbeat `<0>` message interval (seconds).
-141|ResetSeqNumFlag|N|Indicates that the both sides of the FIX session should reset sequence numbers. Valid values: Y = Yes, reset sequence numbers N = No.
-
 >ForLibr Quickfixn
 
 ```csharp
@@ -37,10 +29,16 @@ Logon logon = new Logon()
             };
 ```
 
+The Logon `<A>` message must be the first message sent by the application requesting to initiate a FIX session. The Logon `<A>` message authenticates an institution establishing a connection to Server.
+
+Tag|Name|Req|Description
+---|----|---|-----------
+98|EncryptMethod|Y|Server does not support encryption. Valid values: 0 = None.
+108|HeartBtInt|Y|Heartbeat `<0>` message interval (seconds).
+141|ResetSeqNumFlag|N|Indicates that the both sides of the FIX session should reset sequence numbers. Valid values: Y = Yes, reset sequence numbers N = No.
+
 
 ## Logout < 5> message
-
-The Logout `<5>` message initiates or confirms the termination of a FIX session. Disconnection without the exchange of Logout `<5>` messages should be interpreted as an abnormal condition.
 
 >ForLibr Quickfixn
 
@@ -48,26 +46,14 @@ The Logout `<5>` message initiates or confirms the termination of a FIX session.
 Logout logout = new Logout();
 ```
 
+The Logout `<5>` message initiates or confirms the termination of a FIX session. Disconnection without the exchange of Logout `<5>` messages should be interpreted as an abnormal condition.
+
+
 ## Workflow
 
 After connecting, logging on, and synchronizing sequence numbers, the client can submit orders.
 
 ## New Order Single < D> message
-
-To submit a new order to server, send a New Order Single `<D>` message.Server will respond to a New Order Single `<D>` message with an Execution Report `<8>`.
-
-Tag|Name|Req|Description
----|----|---|-----------
-11 | ClOrdID | Y | Unique identifier of the order as assigned by the client. Uniqueness must be guaranteed by the client for the duration of the lifetime the order.
-1 | Account | N | Market account id
-660 | AcctIDSource | Y * (required if use Account `<1>`) | Type of account. Should be 99 = Other (custom or proprietary) This field is required if 1 = Account contains account identifier.
-40 | OrdType| Y | Order type. Valid values:   1 = Market   2 = Limit
-44 | Price | Y * (required if OrdType `<40>` = 2  Limit) | Price per unit of quantity
-38 | OrderQty | Y | Quantity ordered. Needed > 0
-54 | Side |Y | Side of the order. Valid values:   1 = Buy    2 = Sell
-55 | Symbol | Y | Ticker symbol. Common, "human understood" representation of the security. e.g. ETH/BTC
-59 | TimeInForce | N | Specifies how long the order remains in effect. Valid values: 1 = Good Till Cancel (GTC) 3 = Immediate or Cancel (IOC) 4 = Fill or Kill (FOK)
-60 | TransactTime | Y | Time of request creation
 
 >ForLibr Quickfixn
 
@@ -87,8 +73,29 @@ Tag|Name|Req|Description
 
 ```
 
+To submit a new order to server, send a New Order Single `<D>` message.Server will respond to a New Order Single `<D>` message with an Execution Report `<8>`.
+
+Tag|Name|Req|Description
+---|----|---|-----------
+11 | ClOrdID | Y | Unique identifier of the order as assigned by the client. Uniqueness must be guaranteed by the client for the duration of the lifetime the order.
+1 | Account | N | Market account id
+660 | AcctIDSource | Y * (required if use Account `<1>`) | Type of account. Should be 99 = Other (custom or proprietary) This field is required if 1 = Account contains account identifier.
+40 | OrdType| Y | Order type. Valid values:   1 = Market   2 = Limit
+44 | Price | Y * (required if OrdType `<40>` = 2  Limit) | Price per unit of quantity
+38 | OrderQty | Y | Quantity ordered. Needed > 0
+54 | Side |Y | Side of the order. Valid values:   1 = Buy    2 = Sell
+55 | Symbol | Y | Ticker symbol. Common, "human understood" representation of the security. e.g. ETH/BTC
+59 | TimeInForce | N | Specifies how long the order remains in effect. Valid values: 1 = Good Till Cancel (GTC) 3 = Immediate or Cancel (IOC) 4 = Fill or Kill (FOK)
+60 | TransactTime | Y | Time of request creation
+
 
 ## Submitting an order
+
+>ForLibr Quickfixn
+
+```csharp
+
+```
 
 1. Client sends server → New Order Single `<D>` message
 2. Does server accept the order?
@@ -108,13 +115,14 @@ Tag|Name|Req|Description
       * ExecType `<150>` set to 8 = Rejected
       * OrdStatus `<39>` set to 8 = Rejected
 
+
+## Execution Report < 8> message
+
 >ForLibr Quickfixn
 
 ```csharp
 
 ```
-
-## Execution Report < 8> message
 
 Server uses the Execution Report `<8>` message to:
 *confirm the receipt of an order
@@ -143,13 +151,14 @@ Tag|Name|Req|Description
 911 | TotNumReports | Y * (Required if responding to a Order Mass Status Request `<AF>`. Echo back the value provided by the requester.) | Total number of reports returned in response to a request
 912 | LastRptRequested | Y * (Required if responding to a Order Mass Status Request `<AF>`. Echo back the value provided by the requester.) |Indicates whether this message is that last report message in response to a Order Mass Status Request `<AF>`.<br>Y = Last message<br>N = Not last message 
 
+
+## Order Cancel/Replace Request < G> message
+
 >ForLibr Quickfixn
 
 ```csharp
 
 ```
-
-## Order Cancel/Replace Request < G> message
 
 The order cancel/replace request is used to change the parameters of an existing order. Do not use this message to cancel the remaining quantity of an outstanding order, use the Order Cancel Request `<F>` message for this purpose.
 
@@ -165,13 +174,14 @@ Tag|Name|Req|Description
 59 | TimeInForce | N | Specifies how long the order remains in effect. <br>Valid values:<br>   1 = Good Till Cancel (GTC)<br>   3 = Immediate or Cancel (IOC)<br>   4 = Fill or Kill (FOK)<br>Must be equal of an existing order
 60 | TransactTime | Y | Time of request creation
 
+
+## Submitting an order changes
+
 >ForLibr Quickfixn
 
 ```csharp
 
 ```
-
-## Submitting an order changes
 
 3. Client sends server → Order Cancel/Replace Request `<G>` message
 4. Does server accept the changes?
@@ -193,13 +203,13 @@ Tag|Name|Req|Description
 			* If order not found, CxlRejReason `<102>` set to 1 = Unknown order.
 
 
+## Order Cancel Request < F> message
+
 >ForLibr Quickfixn
 
 ```csharp
 
 ```
-
-## Order Cancel Request < F> message
 
 The Order Cancel Request `<F>` message requests the cancellation of all of the remaining quantity of an existing order.
 
@@ -212,13 +222,14 @@ Tag|Name|Req|Description
 55 | Symbol | Y | Ticker symbol. Common, "human understood" representation of the security. e.g. ETH/BTC<br>Must be equal of an existing order
 60 | TransactTime | Y | Time of request creation
 
+
+## Submitting an order cancel
+
 >ForLibr Quickfixn
 
 ```csharp
 
 ```
-
-## Submitting an order cancel
 
 5. Client sends server → Order Cancel Request `<F>` message
 6. Does server accept cancel order request?
@@ -235,13 +246,14 @@ Tag|Name|Req|Description
 			* OrdStatus `<39>` set to current order status. If CxlRejReason `<102>` = 'Unknown Order', specify 8 = Rejected.
 			* If order not found, CxlRejReason `<102>` set to 1 = Unknown order.
 
+
+## Order Status Request < H> message
+
 >ForLibr Quickfixn
 
 ```csharp
 
 ```
-
-## Order Status Request < H> message
 
 The Order Status Request `<H>` message is used by the client to generate an order status message (Execution Report `<8>` message) back from the server.
 
@@ -252,13 +264,14 @@ Tag|Name|Req|Description
 
 Response on Order Status Request `<H>` is an Execution Report `<8>` message with current order status. ExecType `<150>` in a response may have two values: 8 = Rejected (if order not found) and I = Order Status. Execution Report `<8>` response contain OrdStatusReqID `<790>` if request contain it.
 
+
+## Order Mass Status Request < AF> message
+
 >ForLibr Quickfixn
 
 ```csharp
 
 ```
-
-## Order Mass Status Request < AF> message
 
 The Order Mass Status Request `<AF>` message requests the status for orders matching criteria specified within the request.
 
@@ -273,13 +286,14 @@ Tag|Name|Req|Description
 
 Responses on Order Mass Status Request `<AF>` message is an Execution Reports `<8>` messages with current order status. ExecType `<150>` in a response may have two values: 8 = Rejected (if matching criteria is incorrect) and I = Order Status. <br>If ExecType `<150>` is 8 = Rejected, then <br>	OrderID `<37>` = "-" and OrdStatus `<39>` = 8 (Rejected)<br>	If Symbol `<55>` not set in request then Symbol `<55>` in response = "-"<br>	If Side `<54>` not set in request then Side `<54>` in response = B ("As Defined")<br>Execution Reports `<8>` contains MassStatusReqID `<584>`, TotNumReports `<911>` and LastRptRequested `<912>`.
 
+
+## Security List Request < x> message
+
 >ForLibr Quickfixn
 
 ```csharp
 
 ```
-
-## Security List Request < x> message
 
 The Security List Request `<x>` message is used to return a list of securities from the server that match criteria provided on the request.
 
@@ -293,13 +307,14 @@ Tag|Name|Req|Description
 
 Response on Security List Request `<x>` message is Security List `<y>` message.
 
+
+## Security List < y> message
+
 >ForLibr Quickfixn
 
 ```csharp
 
 ```
-
-## Security List < y> message
 
 The Security List `<y>` message is used to return a list of securities that matches the criteria specified in a Security List Request `<x>`.
 
@@ -317,13 +332,14 @@ Tag|Name|Req|Description
 393 | TotNoRelatedSym | Y | Total number of securities returned in response to a request
 893 | LastFragment | Y | Indicates whether this message is that last report message in response to a Security List Request `<x>`.<br>Y = Last message<br>N = Not last message
 
+
+## Market Data Request < V> message
+
 >ForLibr Quickfixn
 
 ```csharp
 
 ```
-
-## Market Data Request < V> message
 
 Subscribes the current session to a Market Data - Snapshot/Full Refresh `<W>` followed by zero or more Market Data - Incremental Refresh `<X>` messages.
 
@@ -351,13 +367,14 @@ Possible values:
 	8 = Unsupported MDEntryType `<269>`
 There may be an error description in the field Text `<58>`.
 
+
+## Market Data - Snapshot/Full Refresh < W> message
+
 >ForLibr Quickfixn
 
 ```csharp
 
 ```
-
-## Market Data - Snapshot/Full Refresh < W> message
 
 The Market Data messages are used as the response to a Market Data Request `<V>` message
 
@@ -371,13 +388,14 @@ Tag|Name|Req|Description
 =>270 | MDEntryPx | Y * (required if NoMDEntries `<268>` > 0) | Price `<44>` of the Market Data Entry.
 =>271 | MDEntrySize | Y * (required if NoMDEntries `<268>` > 0) | Quantity `<53>` or volume represented by the Market Data Entry.
 
+
+## Market Data - Incremental Refresh < X> message
+
 >ForLibr Quickfixn
 
 ```csharp
 
 ```
-
-## Market Data - Incremental Refresh < X> message
 
 The Market Data messages are used as the response to a Market Data Request `<V>` message after Market Data - Snapshot/Full Refresh `<W>` message when SubscriptionRequestType `<263>` = 1 ( Snapshot + Updates (Subscribe)) and MDUpdateType `<265>` = 1 (Incremental Refresh)
 
@@ -392,10 +410,5 @@ Tag|Name|Req|Description
 =>55 | Symbol | Y * (required if NoMDEntries `<268>` > 0) | Ticker symbol. Common, "human understood" representation of the security. e.g. ETH/BTC
 =>207 | SecurityExchange | Y * (required if NoMDEntries `<268>` > 0) | Market name.
 
->ForLibr Quickfixn
-
-```csharp
-
-```
 
 >End
