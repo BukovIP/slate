@@ -125,6 +125,8 @@ Tag|Name|Req|Description
 
 ## Order Cancel/Replace Request < G> message
 
+The order cancel/replace request is used to change the parameters of an existing order. Do not use this message to cancel the remaining quantity of an outstanding order, use the Order Cancel Request `<F>` message for this purpose.
+
 >ForLibr Quickfixn
 
 ```csharp
@@ -136,8 +138,6 @@ OrderCancelReplaceRequest orderCancelReplaceRequest = new OrderCancelReplaceRequ
                 new TransactTime(DateTime.Now),
                 new OrdType(OrdType.LIMIT));
 ```
-
-The order cancel/replace request is used to change the parameters of an existing order. Do not use this message to cancel the remaining quantity of an outstanding order, use the Order Cancel Request `<F>` message for this purpose.
 
 Tag|Name|Req|Description
 ---|----|---|-----------
