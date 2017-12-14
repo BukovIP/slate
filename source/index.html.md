@@ -19,16 +19,6 @@ message which represents
 
 ## Logon < A> message
 
->ForLibr Quickfixn
-
-```csharp
-Logon logon = new Logon()
-            {
-                EncryptMethod = new EncryptMethod(EncryptMethod.NONE),
-                HeartBtInt = new HeartBtInt()
-            };
-```
-
 The Logon `<A>` message must be the first message sent by the application requesting to initiate a FIX session. The Logon `<A>` message authenticates an institution establishing a connection to Server.
 
 Tag|Name|Req|Description
@@ -40,12 +30,6 @@ Tag|Name|Req|Description
 
 ## Logout < 5> message
 
->ForLibr Quickfixn
-
-```csharp
-Logout logout = new Logout();
-```
-
 The Logout `<5>` message initiates or confirms the termination of a FIX session. Disconnection without the exchange of Logout `<5>` messages should be interpreted as an abnormal condition.
 
 
@@ -54,6 +38,8 @@ The Logout `<5>` message initiates or confirms the termination of a FIX session.
 After connecting, logging on, and synchronizing sequence numbers, the client can submit orders.
 
 ## New Order Single < D> message
+
+To submit a new order to server, send a New Order Single `<D>` message.Server will respond to a New Order Single `<D>` message with an Execution Report `<8>`.
 
 >ForLibr Quickfixn
 
@@ -70,10 +56,7 @@ After connecting, logging on, and synchronizing sequence numbers, the client can
                 Account = new Account("00000000-0000-0000-0000-000000000000"),
                 AcctIDSource = new AcctIDSource(AcctIDSource.OTHER)
             };
-
 ```
-
-To submit a new order to server, send a New Order Single `<D>` message.Server will respond to a New Order Single `<D>` message with an Execution Report `<8>`.
 
 Tag|Name|Req|Description
 ---|----|---|-----------
@@ -90,12 +73,6 @@ Tag|Name|Req|Description
 
 
 ## Submitting an order
-
->ForLibr Quickfixn
-
-```csharp
-
-```
 
 1. Client sends server → New Order Single `<D>` message
 2. Does server accept the order?
@@ -117,12 +94,6 @@ Tag|Name|Req|Description
 
 
 ## Execution Report < 8> message
-
->ForLibr Quickfixn
-
-```csharp
-
-```
 
 Server uses the Execution Report `<8>` message to:
 *confirm the receipt of an order
@@ -157,7 +128,13 @@ Tag|Name|Req|Description
 >ForLibr Quickfixn
 
 ```csharp
-
+OrderCancelReplaceRequest orderCancelReplaceRequest = new OrderCancelReplaceRequest(
+                new OrigClOrdID("00000000-0000-0000-0000-000000000000"),
+                new ClOrdID("00000000-0000-0000-0000-000000000000"),
+                new Symbol("ETH/LTC"),
+                new Side(Side.BUY),
+                new TransactTime(DateTime.Now),
+                new OrdType(OrdType.LIMIT));
 ```
 
 The order cancel/replace request is used to change the parameters of an existing order. Do not use this message to cancel the remaining quantity of an outstanding order, use the Order Cancel Request `<F>` message for this purpose.
@@ -176,12 +153,6 @@ Tag|Name|Req|Description
 
 
 ## Submitting an order changes
-
->ForLibr Quickfixn
-
-```csharp
-
-```
 
 3. Client sends server → Order Cancel/Replace Request `<G>` message
 4. Does server accept the changes?
@@ -205,13 +176,18 @@ Tag|Name|Req|Description
 
 ## Order Cancel Request < F> message
 
+The Order Cancel Request `<F>` message requests the cancellation of all of the remaining quantity of an existing order.
+
 >ForLibr Quickfixn
 
 ```csharp
-
+OrderCancelRequest orderCancelRequest = new OrderCancelRequest(
+                new OrigClOrdID("00000000-0000-0000-0000-000000000000"),
+                new ClOrdID("00000000-0000-0000-0000-000000000000"),
+                new Symbol("ETH/LTC"),
+                new Side(Side.BUY),
+                new TransactTime(DateTime.Now));
 ```
-
-The Order Cancel Request `<F>` message requests the cancellation of all of the remaining quantity of an existing order.
 
 Tag|Name|Req|Description
 ---|----|---|-----------
@@ -224,12 +200,6 @@ Tag|Name|Req|Description
 
 
 ## Submitting an order cancel
-
->ForLibr Quickfixn
-
-```csharp
-
-```
 
 5. Client sends server → Order Cancel Request `<F>` message
 6. Does server accept cancel order request?
@@ -249,13 +219,16 @@ Tag|Name|Req|Description
 
 ## Order Status Request < H> message
 
+The Order Status Request `<H>` message is used by the client to generate an order status message (Execution Report `<8>` message) back from the server.
+
 >ForLibr Quickfixn
 
 ```csharp
-
+OrderStatusRequest orderStatusRequest = new OrderStatusRequest(
+                new ClOrdID("00000000-0000-0000-0000-000000000000"),
+                new Symbol("ETH/LTC"),
+                new Side(Side.BUY));
 ```
-
-The Order Status Request `<H>` message is used by the client to generate an order status message (Execution Report `<8>` message) back from the server.
 
 Tag|Name|Req|Description
 ---|----|---|-----------
@@ -267,13 +240,16 @@ Response on Order Status Request `<H>` is an Execution Report `<8>` message with
 
 ## Order Mass Status Request < AF> message
 
+The Order Mass Status Request `<AF>` message requests the status for orders matching criteria specified within the request.
+
 >ForLibr Quickfixn
 
 ```csharp
+OrderMassStatusRequest orderMassStatusRequest = new OrderMassStatusRequest(
+                new MassStatusReqID("00000000-0000-0000-0000-000000000000"),
+                new MassStatusReqType(MassStatusReqType.STATUS_FOR_ALL_ORDERS));
 
 ```
-
-The Order Mass Status Request `<AF>` message requests the status for orders matching criteria specified within the request.
 
 Tag|Name|Req|Description
 ---|----|---|-----------
@@ -289,13 +265,20 @@ Responses on Order Mass Status Request `<AF>` message is an Execution Reports `<
 
 ## Security List Request < x> message
 
+The Security List Request `<x>` message is used to return a list of securities from the server that match criteria provided on the request.
+
 >ForLibr Quickfixn
 
 ```csharp
-
+ SecurityListRequest securityListRequest = new SecurityListRequest(
+                    new SecurityReqID("00000000-0000-0000-0000-000000000000"),
+                    new SecurityListRequestType(SecurityListRequestType.SYMBOL))
+            {
+                Symbol = new Symbol("ETH/BTC"),
+                SecurityExchange = new SecurityExchange("Kraken"),
+                Currency = new Currency("BTC")
+            };
 ```
-
-The Security List Request `<x>` message is used to return a list of securities from the server that match criteria provided on the request.
 
 Tag|Name|Req|Description
 ---|----|---|-----------
@@ -309,12 +292,6 @@ Response on Security List Request `<x>` message is Security List `<y>` message.
 
 
 ## Security List < y> message
-
->ForLibr Quickfixn
-
-```csharp
-
-```
 
 The Security List `<y>` message is used to return a list of securities that matches the criteria specified in a Security List Request `<x>`.
 
@@ -335,13 +312,17 @@ Tag|Name|Req|Description
 
 ## Market Data Request < V> message
 
+Subscribes the current session to a Market Data - Snapshot/Full Refresh `<W>` followed by zero or more Market Data - Incremental Refresh `<X>` messages.
+
 >ForLibr Quickfixn
 
 ```csharp
-
+MarketDataRequest marketDataRequest = new MarketDataRequest(
+                new MDReqID("00000000-0000-0000-0000-000000000000"), 
+                new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT), 
+                new MarketDepth(20)
+                );
 ```
-
-Subscribes the current session to a Market Data - Snapshot/Full Refresh `<W>` followed by zero or more Market Data - Incremental Refresh `<X>` messages.
 
 Tag|Name|Req|Description
 ---|----|---|-----------
@@ -370,12 +351,6 @@ There may be an error description in the field Text `<58>`.
 
 ## Market Data - Snapshot/Full Refresh < W> message
 
->ForLibr Quickfixn
-
-```csharp
-
-```
-
 The Market Data messages are used as the response to a Market Data Request `<V>` message
 
 Tag|Name|Req|Description
@@ -390,12 +365,6 @@ Tag|Name|Req|Description
 
 
 ## Market Data - Incremental Refresh < X> message
-
->ForLibr Quickfixn
-
-```csharp
-
-```
 
 The Market Data messages are used as the response to a Market Data Request `<V>` message after Market Data - Snapshot/Full Refresh `<W>` message when SubscriptionRequestType `<263>` = 1 ( Snapshot + Updates (Subscribe)) and MDUpdateType `<265>` = 1 (Incremental Refresh)
 
