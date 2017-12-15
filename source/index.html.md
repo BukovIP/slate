@@ -13,7 +13,7 @@ includes:
 search: true
 ---
 
-# QuantsBrothers Framework gateway FIX API
+# Framework gateway FIX API
 message which represents 
 
 
@@ -21,15 +21,15 @@ message which represents
 
 After connecting and logging on, the client can either request a security list or subscribe to market data.
 
-Gemini does not resend messages on a market data channel. Instead, Gemini will send a `Sequence Reset <4>` message with `GapFillFlag <123>` field set to Y and the new sequence number in the `MsgSeqNum <34>` field.
+Server does not resend messages on a market data channel. Instead, Server will send a `Sequence Reset <4>` message with `GapFillFlag <123>` field set to Y and the new sequence number in the `MsgSeqNum <34>` field.
 
 
 **Security list**
 
-Optional: Gemini offers a security list that supplies the definitive list of symbols traded on the exchange.
+Optional: Server offers a security list that supplies the definitive list of symbols traded on the exchange.
 
 1. Client sends a `Security List Request <x>`
-2. Gemini responds with a `Security List <y>`
+2. Server responds with a `Security List <y>`
 
 
 **Market data subscription**
@@ -39,8 +39,8 @@ After connecting to the the market data channel, the client subscribes to market
 When a client disconnects for any reason, the market data subscription is terminated. Upon reconnecting, the client needs to send another `Market Data Request <V>` message.
 
 1. Client sends a `Market Data Request <V>`
-2. Gemini responds by sending one Market Data - `Snapshot/Full Refresh <W>`
-3. As bids, offers, trades and/or auctions happen on the exchange, Gemini sends Market Data - `Incremental Refresh <X>` messages
+2. Server responds by sending one Market Data - `Snapshot/Full Refresh <W>`
+3. As bids, offers, trades and/or auctions happen on the exchange, Server sends Market Data - `Incremental Refresh <X>` messages
 
 *.*FIX 4.4 EP 26 is used to backport MDEntryType (269) = Q Auction Clearing Price to denote indicative and final auction prices.*
 
